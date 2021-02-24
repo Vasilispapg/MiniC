@@ -177,3 +177,18 @@ public:
 	virtual ~CBreakStatement();
 	int Eval();
 };
+
+class CFunction : public STNode {
+public:
+	CFunction();
+	virtual ~CFunction();
+	int Eval();
+};
+
+class CArguments : public STNode {
+public:
+	CArguments();
+	virtual ~CArguments();
+	int Eval();
+};
+ 

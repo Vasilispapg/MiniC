@@ -299,3 +299,22 @@ int CBreakStatement::Eval() {
 
 CCompoundStatement::CCompoundStatement() : STNode(NodeType::COMPOUNDSTATEMENT){}
 CCompoundStatement::~CCompoundStatement(){}
+
+
+CFunction::CFunction() : STNode(NodeType::FUNCTION){}
+CFunction::~CFunction(){}
+
+int CFunction::Eval() { //οτι θελω για την func πρεπει να ισχυει εκει μεσα
+	//μολις τελειωσει η func θα πρεπει να αναιρουνται ολα
+
+
+	return 0;
+}
+
+CArguments::CArguments() : STNode(NodeType::ARGUMENTS) {}
+CArguments::~CArguments() {}
+
+int CArguments::Eval() {
+
+	return 0;
+}
