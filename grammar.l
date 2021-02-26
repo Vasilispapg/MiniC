@@ -28,6 +28,8 @@ typedef yy::parser::token token;
 ")"				{ return ')';}
 "{"				{ return '{';}
 "}"				{ return '}';}
+"["				{ return '[';}
+"]"				{ return ']';}
 ";"				{ return ';';}
 ","				{ return ',';}
 "="				{ return '=';}

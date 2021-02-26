@@ -85,18 +85,15 @@ public:
 	int m_number;
 	virtual ~CNUMBER();
 	int Eval() override;
-
 };
 
 class CIDENTIFIER : public STNode {
 public:
 	int m_number;
 	string m_name;
-
 	CIDENTIFIER(char* text);
 	virtual ~CIDENTIFIER();
 	int Eval() override;
-
 };
 
 class CAssignment : public STNode {
@@ -175,20 +172,34 @@ class CBreakStatement : public STNode {
 public:
 	CBreakStatement();
 	virtual ~CBreakStatement();
-	int Eval();
+	int Eval() override;
 };
 
 class CFunction : public STNode {
 public:
 	CFunction();
 	virtual ~CFunction();
-	int Eval();
+	int Eval() override;
 };
 
 class CArguments : public STNode {
 public:
 	CArguments();
 	virtual ~CArguments();
-	int Eval();
+	int Eval() override;
+
 };
  
+class CSet : public STNode {
+public:
+	CSet();
+	virtual ~CSet();
+	int Eval() override;
+
+};
+
+class CFormalArgs : public STNode {
+public:
+	CFormalArgs();
+	virtual ~CFormalArgs();
+};

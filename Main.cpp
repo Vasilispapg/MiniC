@@ -17,6 +17,7 @@ int main(int argc, char* argv[]) {
 	g_root->Eval();
 
 
+
 	system("dot -Tgif stree.dot -o stree.dot.gif");
 	return 0;	
 

@@ -1,6 +1,7 @@
 #include "SymbolNodes.h"
 #include "SymbolTable.h"
 #include <iostream>
+#include <set>
 
 CCompileUnit::CCompileUnit() :STNode(NodeType::COMPILEUNIT) {}
 CCompileUnit::~CCompileUnit() {}
@@ -246,6 +247,7 @@ int CIDENTIFIER::Eval() {
 	return m_number;
 }
 
+
 CAssignment::CAssignment() : STNode(NodeType::EXPRESSION_ASSIGN){}
 
 
@@ -260,6 +262,7 @@ int CAssignment::Eval() {
 	return id->m_number;
 }
 
+
 CWhileStatement::CWhileStatement() : STNode(NodeType::WHILESTATEMENT){}
 CWhileStatement::~CWhileStatement(){}
 
@@ -272,9 +275,7 @@ int CWhileStatement::Eval() {
 			break;
 		}
 		(*it_child2)->Eval();
-		
 	}
-
 	return 0;
 }
 CPlusplus::CPlusplus() : STNode(NodeType::PLUSPLUS) {}
@@ -315,6 +316,29 @@ CArguments::CArguments() : STNode(NodeType::ARGUMENTS) {}
 CArguments::~CArguments() {}
 
 int CArguments::Eval() {
+	list<STNode*>::iterator it = m_children->begin();
+	for (; it != m_children->end(); it++) {
+		(*it)->Eval();
+	}
 
-	return 0;
+	return 2;
 }
+
+CSet::CSet() : STNode(NodeType::SET) {}
+CSet::~CSet(){}
+
+int CSet::Eval() {
+	set<int> s;
+	if (m_children->size() != 0) {
+		list<STNode*>::iterator it = m_children->begin();
+		for (; it != m_children->end(); it++) {
+			int num = (*it)->Eval();
+			cout << num << endl;
+			s.insert(num);
+		}
+	}
+	return 2;
+}
+
+CFormalArgs::CFormalArgs() : STNode(NodeType::FUNCTION_ARGUMENTS) {}
+CFormalArgs::~CFormalArgs() {}

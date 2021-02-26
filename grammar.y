@@ -26,7 +26,7 @@ STNode* node;
 %left PLUS MINUS PLUSPLUS
 %left MULT DIV
 %nonassoc NOT ELSE
-%type <node> exprs compileUnit statement if_statement while_statement compound_statement statements function
+%type <node> exprs compileUnit statement if_statement while_statement set compound_statement statements arguments
 
 %%
 
@@ -37,34 +37,8 @@ compileUnit : statement { g_root= $$ = new CCompileUnit();
 							$$->AddChild($1);
 							$$->AddChild($2);
 						  }
-			| function compound_statement { g_root= $$ = new CCompileUnit();
-													$$->AddChild($1);
-													$$->AddChild($2);
-											 }
-			| compileUnit function compound_statement { g_root= $$ = new CCompileUnit();
-														$$->AddChild($1);
-														$$->AddChild($2);
-														$$->AddChild($3);
-						  }
 		;
 
-function : FUNCTION IDENTIFIER '(' arguments ')' {  $$ = new CFunction();
-													$$->AddChild($2);
-													$$->AddChild($4);
-												}
-		| FUNCTION IDENTIFER '(' ')' {  $$ = new CFunction();
-										$$->AddChild($2);
-									}
-		;
-
-arguments : IDENTIFIER { $$ = new CArguments();
-						 $$->AddChild($1);
-					   }
-		| arguments ',' IDENTIFIER { $$ = new CArguments();
-									 $$->AddChild($1);
-									 $$->AddChild($2);
-									}
-		;
 
 statement : exprs ';' { $$ = new CStatement();
 						$$->AddChild($1);
@@ -75,6 +49,7 @@ statement : exprs ';' { $$ = new CStatement();
 		|	BREAK ';' { $$ = new CBreakStatement();}
 		|	RETURN exprs ';'
 		|	compound_statement
+		| set ';'
 		;
 
 
@@ -83,6 +58,7 @@ compound_statement : '{' '}'				{$$ = new CCompoundStatement();}
 											$$->AddChild($2);
 											}
 					;
+
 statements : statement { $$ = new CStatements();
 						$$->AddChild($1);
 						}
@@ -109,8 +85,28 @@ while_statement:  WHILE '(' exprs ')' statement { $$ = new CWhileStatement();
 												}
 				;
 
+set : '[' ']' {$$ = new CSet();}
+	|'[' arguments ']' {$$ = new CSet();
+						 $$->AddChild($2);}
+	;
+
+
+arguments : exprs { $$ = new CArguments();
+						 $$->AddChild($1);
+					   }
+		| arguments ',' exprs { $$ = new CArguments();
+									 $$->AddChild($1);
+									 $$->AddChild($3);
+									}
+		;
+
 exprs : NUMBER 
 	| IDENTIFIER
+	| IDENTIFIER '=' set   {$$ = new CAssignment();
+							$$->AddChild($1);
+							$$->AddChild($3);
+							}
+	| set
 	| IDENTIFIER '=' exprs {$$ = new CAssignment();
 							$$->AddChild($1);
 							$$->AddChild($3);
@@ -162,6 +158,7 @@ exprs : NUMBER
 						$$->AddChild($1);
 						$$->AddChild($3);}
 	;
+
 
 
 
