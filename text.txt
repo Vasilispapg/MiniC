@@ -7,3 +7,5 @@ union(z,ex);
 e={};
 union(e,z);
 setxor(ex,a);
+ismember(31,a);
+ismember(3,a);

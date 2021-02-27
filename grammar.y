@@ -134,7 +134,7 @@ set_operations:  UNION '(' IDENTIFIER ',' IDENTIFIER ')' {	$$ = new CUnion();
 															$$->AddChild($3);
 															$$->AddChild($5);
 														}
-		|  ISMEMBER '(' IDENTIFIER ',' IDENTIFIER ')' {$$ = new CIsmember();
+		|  ISMEMBER '(' NUMBER ',' IDENTIFIER ')' {$$ = new CIsmember();
 															$$->AddChild($3);
 															$$->AddChild($5);
 														}

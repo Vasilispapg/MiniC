@@ -559,22 +559,17 @@ set<int> CSetxor::EvalSet() {
 }
 set<int> CIsmember::EvalSet() {
 	list<STNode*>::iterator it = m_children->begin();
-	CIDENTIFIER* id_1 = dynamic_cast<CIDENTIFIER*>(*it); //to prwto id
+	int num = (*it)->Eval();
 	advance(it, 1);
-	CIDENTIFIER* id_2 = dynamic_cast<CIDENTIFIER*>(*it);//to deytero id
+	CIDENTIFIER* id = dynamic_cast<CIDENTIFIER*>(*it);//to deytero id
 	set<int> m_set;
-
-	if (m_set.size() != 0) {
-		cout << "ISMEMBER: { ";
-		for (set<int>::iterator it = m_set.begin(); it != m_set.end(); it++) {
-			printf("%d,", *it);
+	for(set<int>::iterator itr = id->m_set.begin(); itr != id->m_set.end(); itr++) {
+		if (num == *itr) {
+			cout << "Yes the number "<< num <<" exist in the set:"<< id->m_name << endl;
+			return m_set;
 		}
-		cout << "\b}" << endl;
 	}
-	else {
-		cout << "ISMEMBER: {}" << endl;
-	}
-
+	cout << "The number " << num << " does not exist in the set: " << id->m_name << endl;
 
 	return m_set;
 } //not done yet
