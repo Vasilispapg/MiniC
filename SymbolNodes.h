@@ -1,6 +1,7 @@
 #pragma once
 #include "STNode.h"
 
+
 class CCompileUnit : public STNode {
 public:
 	CCompileUnit();
@@ -91,9 +92,11 @@ class CIDENTIFIER : public STNode {
 public:
 	int m_number;
 	string m_name;
+	set<int> m_set;
 	CIDENTIFIER(char* text);
 	virtual ~CIDENTIFIER();
 	int Eval() override;
+
 };
 
 class CAssignment : public STNode {
@@ -101,6 +104,14 @@ public:
 	CAssignment();
 	virtual ~CAssignment();
 	int Eval() override;
+
+};
+
+class CAssignmentForSet : public STNode {
+public:
+	CAssignmentForSet();
+	virtual ~CAssignmentForSet();
+	set<int> EvalSet() override;
 
 };
 
@@ -187,6 +198,7 @@ public:
 	CArguments();
 	virtual ~CArguments();
 	int Eval() override;
+	set<int> EvalSet() override;
 
 };
  
@@ -194,7 +206,9 @@ class CSet : public STNode {
 public:
 	CSet();
 	virtual ~CSet();
-	int Eval() override;
+//	int Eval() override;
+	set<int> EvalSet() override;
+
 
 };
 
@@ -203,3 +217,53 @@ public:
 	CFormalArgs();
 	virtual ~CFormalArgs();
 };
+
+class CAssignmentForID : public STNode {
+public:
+	CAssignmentForID();
+	virtual ~CAssignmentForID();
+	int Eval() override;
+};
+
+class CAssignmentForID_Set : public STNode {
+public:
+	CAssignmentForID_Set();
+	virtual ~CAssignmentForID_Set();
+	set<int> EvalSet() override;
+};
+
+
+class CUnion : public STNode {
+public:
+	CUnion();
+	virtual ~CUnion();
+	set<int> EvalSet() override;
+};
+
+class CUnique : public STNode {
+public:
+	CUnique();
+	virtual ~CUnique();
+	set<int> EvalSet() override;
+};
+
+class CSetxor : public STNode {
+public:
+	CSetxor();
+	virtual ~CSetxor();
+	set<int> EvalSet() override;
+};
+class CIsmember : public STNode {
+public:
+	CIsmember();
+	virtual ~CIsmember();
+	set<int> EvalSet() override;
+};
+class CSetdiff : public STNode {
+public:
+	CSetdiff();
+	virtual ~CSetdiff();
+	set<int> EvalSet() override;
+};
+
+

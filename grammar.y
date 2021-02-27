@@ -18,7 +18,7 @@ STNode* node;
 %language "C++"
 %start compileUnit
 %token <node> NUMBER IDENTIFIER
-%token RETURN BREAK IF ELSE WHILE FUNCTION
+%token RETURN BREAK IF ELSE WHILE FUNCTION SET ID UNION UNIQUE SETXOR SETDIFF ISMEMBER JOIN
 %right '='
 %left OR
 %left AND
@@ -26,7 +26,7 @@ STNode* node;
 %left PLUS MINUS PLUSPLUS
 %left MULT DIV
 %nonassoc NOT ELSE
-%type <node> exprs compileUnit statement if_statement while_statement set compound_statement statements arguments
+%type <node> exprs compileUnit statement if_statement epxrs_operations set_operations assigns while_statement set compound_statement statements arguments last_exprs
 
 %%
 
@@ -49,7 +49,6 @@ statement : exprs ';' { $$ = new CStatement();
 		|	BREAK ';' { $$ = new CBreakStatement();}
 		|	RETURN exprs ';'
 		|	compound_statement
-		| set ';'
 		;
 
 
@@ -85,33 +84,74 @@ while_statement:  WHILE '(' exprs ')' statement { $$ = new CWhileStatement();
 												}
 				;
 
-set : '[' ']' {$$ = new CSet();}
-	|'[' arguments ']' {$$ = new CSet();
+set : '{' '}' {$$ = new CSet();}
+	|'{' arguments '}' {$$ = new CSet();
 						 $$->AddChild($2);}
 	;
 
 
-arguments : exprs { $$ = new CArguments();
+arguments : last_exprs { $$ = new CArguments();
 						 $$->AddChild($1);
 					   }
-		| arguments ',' exprs { $$ = new CArguments();
+		| arguments ',' last_exprs { $$ = new CArguments();
 									 $$->AddChild($1);
 									 $$->AddChild($3);
 									}
 		;
 
-exprs : NUMBER 
-	| IDENTIFIER
-	| IDENTIFIER '=' set   {$$ = new CAssignment();
+assigns: IDENTIFIER '=' set   {$$ = new CAssignmentForSet();
 							$$->AddChild($1);
 							$$->AddChild($3);
 							}
+
+		| SET IDENTIFIER '=' IDENTIFIER {$$ = new CAssignmentForID_Set();
+							$$->AddChild($2);
+							$$->AddChild($4);
+							}
+		| ID IDENTIFIER '=' IDENTIFIER {$$ = new CAssignmentForID();
+							$$->AddChild($2);
+							$$->AddChild($4);
+							}
+		| IDENTIFIER '=' exprs {$$ = new CAssignment();
+							$$->AddChild($1);
+							$$->AddChild($3);
+							}
+		;
+
+set_operations:  UNION '(' IDENTIFIER ',' IDENTIFIER ')' {	$$ = new CUnion();
+															$$->AddChild($3);
+															$$->AddChild($5);
+														}
+			| UNIQUE '(' IDENTIFIER ',' IDENTIFIER ')' {	$$ = new CUnique();
+															$$->AddChild($3);
+															$$->AddChild($5);
+														}
+		|  SETXOR '(' IDENTIFIER ',' IDENTIFIER ')' {	$$ = new CSetxor();
+															$$->AddChild($3);
+															$$->AddChild($5);
+														}
+		|  SETDIFF '(' IDENTIFIER ',' IDENTIFIER ')' {	$$ = new CSetdiff();
+															$$->AddChild($3);
+															$$->AddChild($5);
+														}
+		|  ISMEMBER '(' IDENTIFIER ',' IDENTIFIER ')' {$$ = new CIsmember();
+															$$->AddChild($3);
+															$$->AddChild($5);
+														}
+			;
+
+last_exprs: NUMBER
+		| IDENTIFIER
+		;
+
+exprs : last_exprs
 	| set
-	| IDENTIFIER '=' exprs {$$ = new CAssignment();
-							$$->AddChild($1);
-							$$->AddChild($3);
-							}
-	|	exprs PLUS exprs {$$ = new CAdd();
+	| assigns
+	| epxrs_operations
+	| set_operations
+	;
+
+epxrs_operations:	exprs PLUS exprs {$$ = new CAdd();
 						$$->AddChild($1);
 						$$->AddChild($3);
 						}
@@ -157,8 +197,8 @@ exprs : NUMBER
 	| exprs NEQUAL exprs {$$ = new CNequal();
 						$$->AddChild($1);
 						$$->AddChild($3);}
-	;
 
+		;
 
 
 

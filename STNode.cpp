@@ -3,16 +3,20 @@
 STNode* g_root = nullptr;
 int STNode::m_serialCounter = 0;
 bool STNode::break_status = false;
+
 const char* g_nodeType[] = { "COMPILEUNIT","STATEMENTS", "SET",
 					   "STATEMENT","FUNCTION_ARGUMENTS","IFSTATEMENT" ,"WHILESTATEMENT", "RETURNSTATEMENT","BREAKSTATEMENT",
 					  "EXPRESSION_NUMBER", "EXPRESSION_VARIABLE", "FUNCTION", "ARGUMENTS",
 					  "EXPRESSION_ADD", "EXPRESSION_MINUS", "EXPRESSION_MULT", "EXPRESSION_DIV" ,
-					 "NT_EXPRESSION_ASSIGN", "NT_IDENTIFIER","EXPRESSION_AND","EXPRESSION_OR",
+					 "NT_EXPRESSION_ASSIGN","NT_EXPRESSION_ASSIGN_FOR_SET", "NT_IDENTIFIER","EXPRESSION_AND","EXPRESSION_OR",
 					"EXPRESSION_LTE","EXPRESSION_LT","EXPRESSION_NOT","EXPRESSION_GT",
-					"EXPRESSION_GTE","EXPRESSION_EQUAL","EXPRESSION_NEQUAL","PLUS_PLUS","COMPOUNDSTATEMENT" };
+					"EXPRESSION_GTE","EXPRESSION_EQUAL","EXPRESSION_NEQUAL","PLUS_PLUS","COMPOUNDSTATEMENT",
+					"ASSIGN_FOR_ID_SET","ASSIGN_FOR_ID","EXPRESSION_UNION",
+					"EXPRESSION_UNIQUE","EXPRESSION_SETXOR",
+					"EXPRESSION_SETDIFF","EXPRESSION_ISMEMBER"
+};
 
 STNode::STNode(NodeType type) {
-
 	m_nodeType = type;
 	m_serial = m_serialCounter++;
 	m_children = new list < STNode*>;
@@ -77,3 +81,14 @@ int STNode::Eval() {
 	return 0;
 }
 
+set<int> STNode::EvalSet() {
+	set<int> m_set;
+	list <STNode*>::iterator it;
+	for (it = m_children->begin(); it != m_children->end(); it++) {
+		m_set =(*it)->EvalSet();
+		if (break_status) {
+			break;
+		}
+	}
+	return m_set;
+}

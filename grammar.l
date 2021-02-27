@@ -23,13 +23,19 @@ typedef yy::parser::token token;
 "break"			{ return token::BREAK;}
 "while"			{ return token::WHILE;}
 "function"		{ return token::FUNCTION;}
+"set"			{ return token::SET;}
+"id"			{ return token::ID;}
+"union"			{ return token::UNION;}
+"unique"		{ return token::UNIQUE;}
+"join"			{ return token::JOIN;}
+"setxor"		{ return token::SETXOR;}
+"setdiff"		{ return token::SETDIFF;}
+"ismember"		{ return token::ISMEMBER;}
 
 "("				{ return '(';}
 ")"				{ return ')';}
 "{"				{ return '{';}
 "}"				{ return '}';}
-"["				{ return '[';}
-"]"				{ return ']';}
 ";"				{ return ';';}
 ","				{ return ',';}
 "="				{ return '=';}
@@ -57,7 +63,7 @@ typedef yy::parser::token token;
 
 
 					
-[ \t]	
+[ \t]
 [\r\n]
 
 %%

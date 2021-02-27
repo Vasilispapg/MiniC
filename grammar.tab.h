@@ -101,20 +101,28 @@ STNode* node;
      ELSE = 263,
      WHILE = 264,
      FUNCTION = 265,
-     OR = 266,
-     AND = 267,
-     NEQUAL = 268,
-     EQUAL = 269,
-     LT = 270,
-     LTE = 271,
-     GT = 272,
-     GTE = 273,
-     PLUSPLUS = 274,
-     MINUS = 275,
-     PLUS = 276,
-     DIV = 277,
-     MULT = 278,
-     NOT = 279
+     SET = 266,
+     ID = 267,
+     UNION = 268,
+     UNIQUE = 269,
+     SETXOR = 270,
+     SETDIFF = 271,
+     ISMEMBER = 272,
+     JOIN = 273,
+     OR = 274,
+     AND = 275,
+     NEQUAL = 276,
+     EQUAL = 277,
+     LT = 278,
+     LTE = 279,
+     GT = 280,
+     GTE = 281,
+     PLUSPLUS = 282,
+     MINUS = 283,
+     PLUS = 284,
+     DIV = 285,
+     MULT = 286,
+     NOT = 287
    };
 
     };
@@ -287,7 +295,7 @@ STNode* node;
 
 } // yy
 /* Line 33 of lalr1.cc  */
-#line 291 "grammar.tab.h"
+#line 299 "grammar.tab.h"
 
 
 
