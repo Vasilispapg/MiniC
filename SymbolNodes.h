@@ -49,6 +49,8 @@ public:
 	CAdd();
 	virtual ~CAdd();
 	int Eval() override;
+	set<int> EvalSet() override;
+
 
 };
 class CPlusplus : public STNode {
@@ -56,6 +58,7 @@ public:
 	CPlusplus();
 	virtual ~CPlusplus();
 	int Eval() override;
+	set<int> EvalSet() override;
 
 };
 
@@ -64,6 +67,7 @@ public:
 	CMinus();
 	virtual ~CMinus();
 	int Eval() override;
+	set<int> EvalSet() override;
 
 };
 class CMult : public STNode {
@@ -71,6 +75,7 @@ public:
 	CMult();
 	virtual ~CMult();
 	int Eval() override;
+	set<int> EvalSet() override;
 
 };
 class CDiv : public STNode {
@@ -78,6 +83,7 @@ public:
 	CDiv();
 	virtual ~CDiv();
 	int Eval() override;
+	set<int> EvalSet() override;
 
 };
 class CNUMBER : public STNode {
@@ -86,6 +92,8 @@ public:
 	int m_number;
 	virtual ~CNUMBER();
 	int Eval() override;
+	set<int> EvalSet() override;
+
 };
 
 class CIDENTIFIER : public STNode {
@@ -96,6 +104,7 @@ public:
 	CIDENTIFIER(char* text);
 	virtual ~CIDENTIFIER();
 	int Eval() override;
+	set<int> EvalSet() override;
 
 };
 
@@ -218,21 +227,6 @@ public:
 	virtual ~CFormalArgs();
 };
 
-class CAssignmentForID : public STNode {
-public:
-	CAssignmentForID();
-	virtual ~CAssignmentForID();
-	int Eval() override;
-};
-
-class CAssignmentForID_Set : public STNode {
-public:
-	CAssignmentForID_Set();
-	virtual ~CAssignmentForID_Set();
-	set<int> EvalSet() override;
-};
-
-
 class CUnion : public STNode {
 public:
 	CUnion();
@@ -265,5 +259,3 @@ public:
 	virtual ~CSetdiff();
 	set<int> EvalSet() override;
 };
-
-

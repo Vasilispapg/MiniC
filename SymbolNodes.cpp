@@ -80,6 +80,11 @@ void CCompileUnit::Visit_SyntaxTreePrinter(ofstream* dotfile, STNode* parent) {
 int CNUMBER::Eval() {
 	return m_number;
 }
+set<int> CNUMBER::EvalSet() {
+	set<int> m_set;
+	m_set.insert(m_number);
+	return m_set;
+}
 
 int CAdd::Eval() {
 	list<STNode*>::iterator it=m_children->begin();
@@ -249,6 +254,10 @@ int CIDENTIFIER::Eval() {
 	return m_number;
 }
 
+set<int> CIDENTIFIER::EvalSet() {
+	return m_set;
+}
+
 
 CAssignment::CAssignment() : STNode(NodeType::EXPRESSION_ASSIGN){}
 
@@ -392,50 +401,6 @@ CAssignmentForSet::~CAssignmentForSet(){}
 CFormalArgs::CFormalArgs() : STNode(NodeType::FUNCTION_ARGUMENTS) {}
 CFormalArgs::~CFormalArgs() {}
 
-CAssignmentForID_Set::CAssignmentForID_Set() :STNode(NodeType::ASSIGN_FOR_ID_SET){}
-CAssignmentForID_Set::~CAssignmentForID_Set(){}
-
-CAssignmentForID::CAssignmentForID() : STNode(NodeType::ASSIGN_FOR_ID){}
-CAssignmentForID::~CAssignmentForID(){}
-
-set<int> CAssignmentForID_Set::EvalSet() {
-	list<STNode*>::iterator it = m_children->begin();
-	CIDENTIFIER* id_1 = dynamic_cast<CIDENTIFIER*>(*it); // pairnw to prwto id
-	advance(it, 1);
-	CIDENTIFIER* id_2 = dynamic_cast<CIDENTIFIER*>(*it); //pairnw to 2o id
-
-	id_1->m_set.clear(); // gia na einai adeio to set prin valw ta nea stoixeia
-
-	for (set<int>::iterator itr = id_2->m_set.begin(); itr != id_2->m_set.end(); itr++){
-		id_1->m_set.insert(*itr);
-	}
-
-	if (!id_1->m_set.empty()) { //elegxos an einai adeio
-		cout << id_1->m_name << "= {"; //emfanisi toy set
-		for (set<int>::iterator it = id_1->m_set.begin(); it != id_1->m_set.end(); it++) {
-			printf("%d,", *it);
-		}
-		cout << "\b" << "}" << endl;
-	}
-	else {
-		cout << id_1->m_name << "= {}" << endl; //an einai adeio
-	}
-
-	return id_1->m_set;
-}
-
-int CAssignmentForID::Eval() {
-	list<STNode*>::iterator it = m_children->begin();
-	CIDENTIFIER* id_1 = dynamic_cast<CIDENTIFIER*>(*it);
-	advance(it, 1);
-	CIDENTIFIER* id_2 = dynamic_cast<CIDENTIFIER*>(*it);
-	id_1->m_number = id_2->m_number; 
-
-	cout << id_1->m_name << "=" << id_1->m_number << endl;
-
-	return id_1->m_number;
-}
-
 CUnion::CUnion() : STNode(NodeType::UNION) {}
 CUnion::~CUnion() {}
 
@@ -572,13 +537,14 @@ set<int> CIsmember::EvalSet() {
 	cout << "The number " << num << " does not exist in the set: " << id->m_name << endl;
 
 	return m_set;
-} //not done yet
+} 
 set<int> CSetdiff::EvalSet() {
 	list<STNode*>::iterator it = m_children->begin();
 	CIDENTIFIER* id_1 = dynamic_cast<CIDENTIFIER*>(*it); //to prwto id
 	advance(it, 1);
 	CIDENTIFIER* id_2 = dynamic_cast<CIDENTIFIER*>(*it);//to deytero id
 	set<int> m_set;
+
 
 	if (m_set.size() != 0) {
 		cout << "SETDIFF: { ";
@@ -594,3 +560,81 @@ set<int> CSetdiff::EvalSet() {
 
 	return m_set;
 } //not done yet
+
+
+set<int> CAdd::EvalSet() {
+	list<STNode*>::iterator it = m_children->begin();
+	set<int> result;
+	set<int> set1=(*it)->EvalSet();
+	advance(it, 1);
+	set<int> set2 = (*it)->EvalSet();
+	if (set1.size() == 0 )return set2;
+	if (set2.size() == 0)return set1;
+
+	for (set<int>::iterator itr =set1.begin(); itr != set1.end(); itr++) {
+		for (set<int>::iterator itr2 = set2.begin(); itr2 != set2.end(); itr2++) {
+			int num = *itr + *itr2;
+			result.insert(num);
+		}
+	}
+	return result;
+}
+
+set<int> CMult::EvalSet() {
+	list<STNode*>::iterator it = m_children->begin();
+	set<int> result;
+	set<int> set1 = (*it)->EvalSet();
+	advance(it, 1);
+	set<int> set2 = (*it)->EvalSet();
+	if (set1.size() == 0 || set2.size()==0)return result;
+
+	for (set<int>::iterator itr = set1.begin(); itr != set1.end(); itr++) {
+		for (set<int>::iterator itr2 = set2.begin(); itr2 != set2.end(); itr2++) {
+			result.insert((*itr)*(*itr2));
+			
+		}
+	}
+	return result;
+}
+set<int> CDiv::EvalSet() {
+	list<STNode*>::iterator it = m_children->begin();
+	set<int> result;
+	set<int> set1 = (*it)->EvalSet();
+	advance(it, 1);
+	set<int> set2 = (*it)->EvalSet();
+	if (set1.size() == 0)return set2;
+	if (set2.size() == 0)return set1;
+	for (set<int>::iterator itr = set1.begin(); itr != set1.end(); itr++) {
+		for (set<int>::iterator itr2 = set2.begin(); itr2 != set2.end(); itr2++) {
+			if (*itr2 == 0)exit(1);
+			int num = *itr / *itr2;
+			result.insert(num);
+		}
+	}
+	return result;
+}
+set<int> CMinus::EvalSet() {
+	list<STNode*>::iterator it = m_children->begin();
+	set<int> result;
+	set<int> set1 = (*it)->EvalSet();
+	advance(it, 1);
+	set<int> set2 = (*it)->EvalSet();
+	if (set1.size() == 0)return set2;
+	if (set2.size() == 0)return set1;
+	for (set<int>::iterator itr = set1.begin(); itr != set1.end(); itr++) {
+		for (set<int>::iterator itr2 = set2.begin(); itr2 != set2.end(); itr2++) {
+			int num = *itr - *itr2;
+			result.insert(num);
+		}
+	}
+	return result;
+}
+set<int> CPlusplus::EvalSet() {
+	list<STNode*>::iterator it = m_children->begin();
+	set<int> result;
+	set<int> set1 = (*it)->EvalSet();
+	for (set<int>::iterator itr = set1.begin(); itr != set1.end(); itr++) {
+		result.insert(*itr + 1);
+	}
+	return result;
+}

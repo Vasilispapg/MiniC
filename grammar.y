@@ -26,7 +26,7 @@ STNode* node;
 %left PLUS MINUS PLUSPLUS
 %left MULT DIV
 %nonassoc NOT ELSE
-%type <node> exprs compileUnit statement if_statement epxrs_operations set_operations assigns while_statement set compound_statement statements arguments last_exprs
+%type <node> exprs compileUnit statement if_statement epxrs_operations set_operations assigns while_statement set compound_statement statements arguments last_exprs set_funcs
 
 %%
 
@@ -49,6 +49,9 @@ statement : exprs ';' { $$ = new CStatement();
 		|	BREAK ';' { $$ = new CBreakStatement();}
 		|	RETURN exprs ';'
 		|	compound_statement
+		| epxrs_operations ';' { $$ = new CStatement();
+								$$->AddChild($1);
+								}
 		;
 
 
@@ -104,21 +107,26 @@ assigns: IDENTIFIER '=' set   {$$ = new CAssignmentForSet();
 							$$->AddChild($3);
 							}
 
-		| SET IDENTIFIER '=' IDENTIFIER {$$ = new CAssignmentForID_Set();
+		| SET IDENTIFIER '=' IDENTIFIER {$$ = new CAssignmentForSet();
 							$$->AddChild($2);
 							$$->AddChild($4);
 							}
-		| ID IDENTIFIER '=' IDENTIFIER {$$ = new CAssignmentForID();
+		| SET IDENTIFIER '=' set_operations {$$ = new CAssignmentForSet();
 							$$->AddChild($2);
 							$$->AddChild($4);
 							}
-		| IDENTIFIER '=' exprs {$$ = new CAssignment();
+		| ID IDENTIFIER '=' IDENTIFIER {$$ = new CAssignment();
+							$$->AddChild($2);
+							$$->AddChild($4);
+							}
+		| IDENTIFIER '=' epxrs_operations {$$ = new CAssignment();
 							$$->AddChild($1);
 							$$->AddChild($3);
 							}
+		
 		;
 
-set_operations:  UNION '(' IDENTIFIER ',' IDENTIFIER ')' {	$$ = new CUnion();
+set_funcs:  UNION '(' IDENTIFIER ',' IDENTIFIER ')' {	$$ = new CUnion();
 															$$->AddChild($3);
 															$$->AddChild($5);
 														}
@@ -134,11 +142,15 @@ set_operations:  UNION '(' IDENTIFIER ',' IDENTIFIER ')' {	$$ = new CUnion();
 															$$->AddChild($3);
 															$$->AddChild($5);
 														}
-		|  ISMEMBER '(' NUMBER ',' IDENTIFIER ')' {$$ = new CIsmember();
+		|  ISMEMBER '(' NUMBER ',' IDENTIFIER ')'		{$$ = new CIsmember();
 															$$->AddChild($3);
 															$$->AddChild($5);
+
 														}
+		| SET set_operations
+
 			;
+
 
 last_exprs: NUMBER
 		| IDENTIFIER
@@ -146,57 +158,81 @@ last_exprs: NUMBER
 
 exprs : last_exprs
 	| set
-	| assigns
-	| epxrs_operations
-	| set_operations
+	| assigns 
+	| epxrs_operations 
+	| set_funcs
 	;
 
-epxrs_operations:	exprs PLUS exprs {$$ = new CAdd();
-						$$->AddChild($1);
-						$$->AddChild($3);
-						}
-	|	exprs PLUSPLUS {$$ = new CPlusplus();
-						$$->AddChild($1);
-						}
-	|	exprs MINUS exprs  {$$ = new CMinus();
-						$$->AddChild($1);
-						$$->AddChild($3);
-						}
-	|	exprs DIV exprs   {$$ = new CDiv();
-						$$->AddChild($1);
-						$$->AddChild($3);
-						}
-	|	exprs MULT exprs  {$$ = new CMult();
-						$$->AddChild($1);
-						$$->AddChild($3);
-						}
-	| exprs AND exprs { $$ = new CAnd();
-						$$->AddChild($1);
-						$$->AddChild($3);}
-	| exprs OR exprs{ $$ = new COr();
-						$$->AddChild($1);
-						$$->AddChild($3);}
-	| NOT exprs { $$ = new CNot();
-						$$->AddChild($2);
+epxrs_operations:	last_exprs
+	|	epxrs_operations PLUS epxrs_operations {$$ = new CAdd();
+												$$->AddChild($1);
+												$$->AddChild($3);
+												}
+	|	epxrs_operations PLUSPLUS {$$ = new CPlusplus();
+									$$->AddChild($1);
+									}
+	|	epxrs_operations MINUS epxrs_operations  {$$ = new CMinus();
+													$$->AddChild($1);
+													$$->AddChild($3);
+													}
+	|	epxrs_operations DIV epxrs_operations   {$$ = new CDiv();
+												$$->AddChild($1);
+												$$->AddChild($3);
+												}
+	|	epxrs_operations MULT epxrs_operations  {$$ = new CMult();
+												$$->AddChild($1);
+												$$->AddChild($3);
+												}
+	| epxrs_operations AND epxrs_operations { $$ = new CAnd();
+											$$->AddChild($1);
+											$$->AddChild($3);}
+	| epxrs_operations OR epxrs_operations{ $$ = new COr();
+											$$->AddChild($1);
+											$$->AddChild($3);}
+	| NOT epxrs_operations { $$ = new CNot();
+							$$->AddChild($2);
 				}
-	| exprs LT exprs{$$ = new CLt();
+	| epxrs_operations LT epxrs_operations{$$ = new CLt();
+											$$->AddChild($1);
+											$$->AddChild($3);}
+	| epxrs_operations GT epxrs_operations{$$ = new CGt();
+										$$->AddChild($1);
+										$$->AddChild($3);}
+	| epxrs_operations GTE epxrs_operations{$$ = new CGte();
+											$$->AddChild($1);
+											$$->AddChild($3);}
+	| epxrs_operations LTE epxrs_operations{$$ = new CLte();
+											$$->AddChild($1);
+											$$->AddChild($3);}
+	| epxrs_operations EQUAL epxrs_operations{$$ = new CEqual();
+												$$->AddChild($1);
+												$$->AddChild($3);}
+	| epxrs_operations NEQUAL epxrs_operations {$$ = new CNequal();
+												$$->AddChild($1);
+												$$->AddChild($3);}
+
+		;
+
+set_operations:	last_exprs 
+				|set_operations PLUS set_operations {$$ = new CAdd();
 						$$->AddChild($1);
-						$$->AddChild($3);}
-	| exprs GT exprs{$$ = new CGt();
+						$$->AddChild($3);
+						}
+	|set_operations PLUSPLUS {$$ = new CPlusplus();
 						$$->AddChild($1);
-						$$->AddChild($3);}
-	| exprs GTE exprs{$$ = new CGte();
+						}
+	| set_operations MINUS set_operations  {$$ = new CMinus();
 						$$->AddChild($1);
-						$$->AddChild($3);}
-	| exprs LTE exprs{$$ = new CLte();
+						$$->AddChild($3);
+						}
+	|set_operations DIV set_operations   {$$ = new CDiv();
 						$$->AddChild($1);
-						$$->AddChild($3);}
-	| exprs EQUAL exprs{$$ = new CEqual();
+						$$->AddChild($3);
+						}
+	| set_operations MULT set_operations  {$$ = new CMult();
 						$$->AddChild($1);
-						$$->AddChild($3);}
-	| exprs NEQUAL exprs {$$ = new CNequal();
-						$$->AddChild($1);
-						$$->AddChild($3);}
+						$$->AddChild($3);
+						}
 
 		;
 
