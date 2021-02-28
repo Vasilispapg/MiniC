@@ -17,6 +17,7 @@ typedef yy::parser::token token;
 
 
 
+
 "if"			{ return token::IF;}
 "else"			{ return token::ELSE;}
 "return"		{ return token::RETURN;}
@@ -53,7 +54,6 @@ typedef yy::parser::token token;
 "<="			{ return token::LTE;}
 "=="			{ return token::EQUAL;}
 "!="			{ return token::NEQUAL;}
-
 
 "0"|[1-9][0-9]*  {	yylval->node = new CNUMBER(yytext);
 					return token::NUMBER;}

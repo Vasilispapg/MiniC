@@ -1,9 +1,10 @@
-x={1,2};
-y={4,5};
-set z= x*y;
-set z=x+y;
-set z=x-y;
-set z=y-x;
-set z=x-s;
-set a=z/2;
-set a=a++;
+a={3,6,2,1,5,1,1};
+b={2,4,6};
+
+
+x=3;
+a={2,5};
+while(x<5){
+	set a=a+2;
+	x++;
+}

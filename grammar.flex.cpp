@@ -737,7 +737,8 @@ YY_DECL
 
 
 
-#line 740 "grammar.flex.cpp"
+
+#line 741 "grammar.flex.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -796,177 +797,177 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 20 "grammar.l"
+#line 21 "grammar.l"
 { return token::IF;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 21 "grammar.l"
+#line 22 "grammar.l"
 { return token::ELSE;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 22 "grammar.l"
+#line 23 "grammar.l"
 { return token::RETURN;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 23 "grammar.l"
+#line 24 "grammar.l"
 { return token::BREAK;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 24 "grammar.l"
+#line 25 "grammar.l"
 { return token::WHILE;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 25 "grammar.l"
+#line 26 "grammar.l"
 { return token::FUNCTION;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 26 "grammar.l"
+#line 27 "grammar.l"
 { return token::SET;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 27 "grammar.l"
+#line 28 "grammar.l"
 { return token::ID;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 28 "grammar.l"
+#line 29 "grammar.l"
 { return token::UNION;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 29 "grammar.l"
+#line 30 "grammar.l"
 { return token::UNIQUE;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 30 "grammar.l"
+#line 31 "grammar.l"
 { return token::JOIN;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 31 "grammar.l"
+#line 32 "grammar.l"
 { return token::SETXOR;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 32 "grammar.l"
+#line 33 "grammar.l"
 { return token::SETDIFF;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 33 "grammar.l"
+#line 34 "grammar.l"
 { return token::ISMEMBER;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 35 "grammar.l"
+#line 36 "grammar.l"
 { return '(';}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 36 "grammar.l"
+#line 37 "grammar.l"
 { return ')';}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 37 "grammar.l"
+#line 38 "grammar.l"
 { return '{';}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 38 "grammar.l"
+#line 39 "grammar.l"
 { return '}';}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 39 "grammar.l"
+#line 40 "grammar.l"
 { return ';';}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 40 "grammar.l"
+#line 41 "grammar.l"
 { return ',';}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 41 "grammar.l"
+#line 42 "grammar.l"
 { return '=';}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 42 "grammar.l"
+#line 43 "grammar.l"
 { return token::MULT;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 43 "grammar.l"
+#line 44 "grammar.l"
 { return token::DIV;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 44 "grammar.l"
+#line 45 "grammar.l"
 { return token::MINUS;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 45 "grammar.l"
+#line 46 "grammar.l"
 { return token::PLUS;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 46 "grammar.l"
+#line 47 "grammar.l"
 { return token::PLUSPLUS;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 47 "grammar.l"
+#line 48 "grammar.l"
 { return token::AND;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 48 "grammar.l"
+#line 49 "grammar.l"
 { return token::OR;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 49 "grammar.l"
+#line 50 "grammar.l"
 { return token::NOT;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 50 "grammar.l"
+#line 51 "grammar.l"
 { return token::LT;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 51 "grammar.l"
+#line 52 "grammar.l"
 { return token::GT;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 52 "grammar.l"
+#line 53 "grammar.l"
 { return token::GTE;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 53 "grammar.l"
+#line 54 "grammar.l"
 { return token::LTE;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 54 "grammar.l"
+#line 55 "grammar.l"
 { return token::EQUAL;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 55 "grammar.l"
+#line 56 "grammar.l"
 { return token::NEQUAL;}
 	YY_BREAK
 case 36:
@@ -997,7 +998,7 @@ YY_RULE_SETUP
 #line 69 "grammar.l"
 ECHO;
 	YY_BREAK
-#line 1000 "grammar.flex.cpp"
+#line 1001 "grammar.flex.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 

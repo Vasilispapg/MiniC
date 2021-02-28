@@ -281,11 +281,13 @@ int CWhileStatement::Eval() {
 	list<STNode*>::iterator it_child1 = m_children->begin();
 	list<STNode*>::iterator it_child2=m_children->begin();
 	advance(it_child2, 1);
+	(*it_child2)->EvalSet();
 	while((*it_child1)->Eval()) {
 		if (break_status) {
 			break;
 		}
 		(*it_child2)->Eval();
+		(*it_child2)->EvalSet();
 	}
 	return 0;
 }
@@ -419,15 +421,15 @@ CSetdiff::~CSetdiff() {}
 
 set<int> CUnion::EvalSet() {
 	list<STNode*>::iterator it=m_children->begin();
-	CIDENTIFIER* id_1 = dynamic_cast<CIDENTIFIER*>(*it); //to prwto id
+	set<int> id_1 = (*it)->EvalSet();
 	advance(it, 1);
-	CIDENTIFIER* id_2 = dynamic_cast<CIDENTIFIER*>(*it);//to deytero id
+	set<int> id_2 = (*it)->EvalSet();
 	set<int> m_set;
 	
-	for (set<int>::iterator itr = id_2->m_set.begin(); itr != id_2->m_set.end(); itr++) {
+	for (set<int>::iterator itr = id_2.begin(); itr != id_2.end(); itr++) {
 		m_set.insert(*itr);
 	}
-	for (set<int>::iterator itr = id_1->m_set.begin(); itr != id_1->m_set.end(); itr++) {
+	for (set<int>::iterator itr = id_1.begin(); itr != id_1.end(); itr++) {
 		m_set.insert(*itr);
 	}
 
@@ -446,14 +448,14 @@ set<int> CUnion::EvalSet() {
 
 set<int> CUnique::EvalSet() {
 	list<STNode*>::iterator it = m_children->begin();
-	CIDENTIFIER* id_1 = dynamic_cast<CIDENTIFIER*>(*it); //to prwto id
+	set<int> id_1 = (*it)->EvalSet();
 	advance(it, 1);
-	CIDENTIFIER* id_2 = dynamic_cast<CIDENTIFIER*>(*it);//to deytero id
+	set<int> id_2 = (*it)->EvalSet();
 	set<int>::iterator itr_id2, itr_id1;
 	set<int> m_set;
 	//vriskw ta monadika stoixeia
-	for (itr_id2 = id_2->m_set.begin(); itr_id2 != id_2->m_set.end(); itr_id2++) {
-		for (itr_id1 = id_1->m_set.begin(); itr_id1 != id_1->m_set.end(); itr_id1++) {
+	for (itr_id2 = id_2.begin(); itr_id2 != id_2.end(); itr_id2++) {
+		for (itr_id1 = id_1.begin(); itr_id1 != id_1.end(); itr_id1++) {
 			if (*itr_id1==*itr_id2) {
 				m_set.insert(*itr_id1);
 			}
@@ -475,15 +477,15 @@ set<int> CUnique::EvalSet() {
 
 set<int> CSetxor::EvalSet() {
 	list<STNode*>::iterator it = m_children->begin();
-	CIDENTIFIER* id_1 = dynamic_cast<CIDENTIFIER*>(*it); //to prwto id
+	set<int> id_1 = (*it)->EvalSet();
 	advance(it, 1);
-	CIDENTIFIER* id_2 = dynamic_cast<CIDENTIFIER*>(*it);//to deytero id
+	set<int> id_2 = (*it)->EvalSet();
 	set<int> m_set;
 	//oti yparxei sto id_1 kai oxi sto id_2 kai anapoda.
 	bool flag=false;
 	int num;
-	for (set<int>::iterator it = id_1->m_set.begin(); it != id_1->m_set.end(); it++) {
-		for (set<int>::iterator it2 = id_2->m_set.begin(); it2 != id_2->m_set.end(); it2++) {
+	for (set<int>::iterator it = id_1.begin(); it != id_1.end(); it++) {
+		for (set<int>::iterator it2 = id_2.begin(); it2 != id_2.end(); it2++) {
 			num = *it;
 			if (*it == *it2){
 				flag = true; //den yparxei
@@ -495,8 +497,9 @@ set<int> CSetxor::EvalSet() {
 		}
 		flag = false;
 	}
-	for (set<int>::iterator it2 = id_2->m_set.begin(); it2 != id_2->m_set.end(); it2++) {
-		for (set<int>::iterator it1 = id_1->m_set.begin(); it1 != id_1->m_set.end(); it1++) {
+
+	for (set<int>::iterator it2 = id_2.begin(); it2 != id_2.end(); it2++) {
+		for (set<int>::iterator it1 = id_1.begin(); it1 != id_1.end(); it1++) {
 			num = *it2;
 			if (*it1 == *it2){
 				flag = true; //den yparxei
@@ -526,28 +529,44 @@ set<int> CIsmember::EvalSet() {
 	list<STNode*>::iterator it = m_children->begin();
 	int num = (*it)->Eval();
 	advance(it, 1);
-	CIDENTIFIER* id = dynamic_cast<CIDENTIFIER*>(*it);//to deytero id
-	set<int> m_set;
-	for(set<int>::iterator itr = id->m_set.begin(); itr != id->m_set.end(); itr++) {
+	set<int> id = (*it)->EvalSet(), m_set;
+
+	for(set<int>::iterator itr = id.begin(); itr != id.end(); itr++) {
 		if (num == *itr) {
-			cout << "Yes the number "<< num <<" exist in the set:"<< id->m_name << endl;
+			cout << "Yes the number "<< num <<" exist in the set"<< endl;
 			return m_set;
 		}
 	}
-	cout << "The number " << num << " does not exist in the set: " << id->m_name << endl;
+	cout << "The number " << num << " does not exist in the set: " << endl;
 
 	return m_set;
 } 
 set<int> CSetdiff::EvalSet() {
 	list<STNode*>::iterator it = m_children->begin();
-	CIDENTIFIER* id_1 = dynamic_cast<CIDENTIFIER*>(*it); //to prwto id
-	advance(it, 1);
-	CIDENTIFIER* id_2 = dynamic_cast<CIDENTIFIER*>(*it);//to deytero id
-	set<int> m_set;
+	bool flag = false;
+	int num;
 
+	set<int> id1 = (*it)->EvalSet();
+	advance(it, 1);
+	set<int> id2 = (*it)->EvalSet(), m_set;
+
+	//emfanise oti yparxei sto A kai oxi sto B
+
+	for (set<int>::iterator it = id1.begin(); it != id1.end(); it++) {
+		for (set<int>::iterator it2 = id2.begin(); it2 != id2.end(); it2++) {
+			num = *it;
+			if (*it == *it2) { 
+				flag = true; 
+				break; 
+			}
+		}
+		if (!flag)
+			m_set.insert(num);
+		flag = false;
+	}
 
 	if (m_set.size() != 0) {
-		cout << "SETDIFF: { ";
+		cout << "SETDIFF: {";
 		for (set<int>::iterator it = m_set.begin(); it != m_set.end(); it++) {
 			printf("%d,", *it);
 		}
@@ -637,4 +656,45 @@ set<int> CPlusplus::EvalSet() {
 		result.insert(*itr + 1);
 	}
 	return result;
+}
+
+set<int> CIFStatement::EvalSet() {
+	list<STNode*>::iterator it = m_children->begin();
+	if (m_children->size() == 2) {
+		if ((*it)->Eval())
+		{
+			advance(it, 1);
+			(*it)->EvalSet();
+		}
+	}
+	else {
+		if ((*it)->Eval())
+		{
+			advance(it, 1);
+			(*it)->EvalSet();
+		}
+		else {
+			advance(it, 2);
+			(*it)->EvalSet();
+		}
+	}
+	return {};
+}
+set<int> CWhileStatement::EvalSet() {
+	list<STNode*>::iterator it_child1 = m_children->begin();
+	list<STNode*>::iterator it_child2 = m_children->begin();
+	advance(it_child2, 1);
+	(*it_child2)->Eval();
+	while ((*it_child1)->Eval()) {
+		if (break_status) {
+			break;
+		}
+		(*it_child2)->EvalSet();
+		(*it_child2)->Eval();
+	}
+	return {};
+}
+set<int> CBreakStatement::EvalSet() {
+	break_status = true;
+	return {};
 }

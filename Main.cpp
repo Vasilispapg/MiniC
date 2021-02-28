@@ -14,9 +14,9 @@ int main(int argc, char* argv[]) {
 	
 	ofstream* f = new ofstream("stree.dot", ofstream::out);
 	g_root->Visit_SyntaxTreePrinter(f, nullptr);
+	
 	g_root->Eval();
 	g_root->EvalSet();
-
 
 	system("dot -Tgif stree.dot -o stree.dot.gif");
 	return 0;	

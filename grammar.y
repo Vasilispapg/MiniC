@@ -49,9 +49,6 @@ statement : exprs ';' { $$ = new CStatement();
 		|	BREAK ';' { $$ = new CBreakStatement();}
 		|	RETURN exprs ';'
 		|	compound_statement
-		| epxrs_operations ';' { $$ = new CStatement();
-								$$->AddChild($1);
-								}
 		;
 
 
@@ -70,18 +67,18 @@ statements : statement { $$ = new CStatements();
 									}
 			;
 
-if_statement :    IF '(' exprs ')'statement {$$ = new CIFStatement();
+if_statement :    IF '(' epxrs_operations ')'statement {$$ = new CIFStatement();
 															$$->AddChild($3);
 															$$->AddChild($5);
 														}
-			| IF '(' exprs ')' statement  ELSE  statement  { $$ = new CIFStatement();
+			| IF '(' epxrs_operations ')' statement  ELSE  statement  { $$ = new CIFStatement();
 															 $$->AddChild($3);
 															 $$->AddChild($5);
 															 $$->AddChild($7);
 															}
 			;
 
-while_statement:  WHILE '(' exprs ')' statement { $$ = new CWhileStatement();
+while_statement:  WHILE '(' epxrs_operations ')' statement { $$ = new CWhileStatement();
 														   $$->AddChild($3);
 														   $$->AddChild($5); 
 												}
@@ -126,28 +123,29 @@ assigns: IDENTIFIER '=' set   {$$ = new CAssignmentForSet();
 		
 		;
 
-set_funcs:  UNION '(' IDENTIFIER ',' IDENTIFIER ')' {	$$ = new CUnion();
+set_funcs:  UNION '(' exprs ',' exprs ')' {	$$ = new CUnion();
 															$$->AddChild($3);
 															$$->AddChild($5);
 														}
-			| UNIQUE '(' IDENTIFIER ',' IDENTIFIER ')' {	$$ = new CUnique();
+			| UNIQUE '(' exprs ',' exprs ')' {	$$ = new CUnique();
 															$$->AddChild($3);
 															$$->AddChild($5);
 														}
-		|  SETXOR '(' IDENTIFIER ',' IDENTIFIER ')' {	$$ = new CSetxor();
+		|  SETXOR '(' exprs ',' exprs ')' {	$$ = new CSetxor();
 															$$->AddChild($3);
 															$$->AddChild($5);
 														}
-		|  SETDIFF '(' IDENTIFIER ',' IDENTIFIER ')' {	$$ = new CSetdiff();
+		|  SETDIFF '(' exprs ',' exprs ')' {	$$ = new CSetdiff();
 															$$->AddChild($3);
 															$$->AddChild($5);
 														}
-		|  ISMEMBER '(' NUMBER ',' IDENTIFIER ')'		{$$ = new CIsmember();
+		|  ISMEMBER '(' NUMBER ',' exprs ')'		{$$ = new CIsmember();
 															$$->AddChild($3);
 															$$->AddChild($5);
 
 														}
-		| SET set_operations
+		
+	
 
 			;
 
@@ -161,6 +159,7 @@ exprs : last_exprs
 	| assigns 
 	| epxrs_operations 
 	| set_funcs
+	| SET set_operations
 	;
 
 epxrs_operations:	last_exprs

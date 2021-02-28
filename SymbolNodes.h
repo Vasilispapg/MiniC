@@ -34,6 +34,7 @@ public:
 	CIFStatement();
 	virtual ~CIFStatement();
 	int Eval() override;
+	set<int> EvalSet() override;
 
 };
 
@@ -42,6 +43,8 @@ public:
 	CWhileStatement();
 	virtual ~CWhileStatement();
 	int Eval() override;
+	set<int> EvalSet() override;
+
 };
 
 class CAdd : public STNode {
@@ -193,6 +196,7 @@ public:
 	CBreakStatement();
 	virtual ~CBreakStatement();
 	int Eval() override;
+	set<int> EvalSet() override;
 };
 
 class CFunction : public STNode {
