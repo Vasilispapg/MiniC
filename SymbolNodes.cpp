@@ -11,7 +11,16 @@ CStatements::CStatements() : STNode(NodeType::STATEMENTS) {}
 CStatements::~CStatements(){}
 
 CStatement::CStatement() : STNode(NodeType::STATEMENT) {}
+	
 CStatement::~CStatement() {}
+int CStatement::Eval() {
+	list <STNode*>::iterator it = m_children->begin();
+
+	(*it)->EvalSet();
+	(*it)->Eval();
+	return 0;
+}
+
 
 CAdd::CAdd() : STNode(NodeType::EXPRESSION_ADD) {}
 CAdd::~CAdd(){}
@@ -281,13 +290,11 @@ int CWhileStatement::Eval() {
 	list<STNode*>::iterator it_child1 = m_children->begin();
 	list<STNode*>::iterator it_child2=m_children->begin();
 	advance(it_child2, 1);
-	(*it_child2)->EvalSet();
 	while((*it_child1)->Eval()) {
 		if (break_status) {
 			break;
 		}
-		(*it_child2)->Eval();
-		(*it_child2)->EvalSet();
+		(*it_child2)->Eval(); //gia na trexei tis mesa prajeis
 	}
 	return 0;
 }
@@ -340,18 +347,32 @@ int CArguments::Eval() {
 CSet::CSet() : STNode(NodeType::SET) {}
 CSet::~CSet(){}
 
-set<int> CSet::EvalSet() {
+//set<int> CSet::EvalSet() {
+//	set<int> m_set;
+//	if (m_children->size() != 0) {
+//		set<int>::iterator it_set;
+//		list<STNode*>::iterator it = m_children->begin();
+//		for (; it != m_children->end(); it++) {
+//			m_set=(*it)->EvalSet();
+	//	}
+//	}
+
+	//return m_set; //epistrefete sto CAssignment()
+//}
+
+int CSet::Eval() {
 	set<int> m_set;
 	if (m_children->size() != 0) {
 		set<int>::iterator it_set;
 		list<STNode*>::iterator it = m_children->begin();
 		for (; it != m_children->end(); it++) {
-			m_set=(*it)->EvalSet();
+			m_set = (*it)->EvalSet();
 		}
 	}
 
-	return m_set; //epistrefete sto CAssignment()
+	return 0; //epistrefete sto CAssignment()
 }
+
 
 set<int> CArguments::EvalSet() {
 	int num;
@@ -680,20 +701,20 @@ set<int> CIFStatement::EvalSet() {
 	}
 	return {};
 }
-set<int> CWhileStatement::EvalSet() {
-	list<STNode*>::iterator it_child1 = m_children->begin();
-	list<STNode*>::iterator it_child2 = m_children->begin();
-	advance(it_child2, 1);
-	(*it_child2)->Eval();
-	while ((*it_child1)->Eval()) {
-		if (break_status) {
-			break;
-		}
-		(*it_child2)->EvalSet();
-		(*it_child2)->Eval();
-	}
-	return {};
-}
+//set<int> CWhileStatement::EvalSet() {
+//	list<STNode*>::iterator it_child1 = m_children->begin();
+//	list<STNode*>::iterator it_child2 = m_children->begin();
+//	advance(it_child2, 1);
+//	(*it_child2)->Eval();
+//	while ((*it_child1)->Eval()) {
+//		if (break_status) {
+//			break;
+//		}
+//		(*it_child2)->EvalSet();
+//		(*it_child2)->Eval();
+//	}
+//	return {};
+//}
 set<int> CBreakStatement::EvalSet() {
 	break_status = true;
 	return {};

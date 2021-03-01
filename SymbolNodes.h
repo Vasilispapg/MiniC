@@ -20,6 +20,7 @@ class CStatement : public STNode {
 public:
 	CStatement();
 	virtual ~CStatement();
+	int Eval() override;
 };
 
 class CCompoundStatement : public STNode {
@@ -43,7 +44,7 @@ public:
 	CWhileStatement();
 	virtual ~CWhileStatement();
 	int Eval() override;
-	set<int> EvalSet() override;
+	//set<int> EvalSet() override;
 
 };
 
@@ -219,8 +220,8 @@ class CSet : public STNode {
 public:
 	CSet();
 	virtual ~CSet();
-//	int Eval() override;
-	set<int> EvalSet() override;
+	int Eval() override;
+	//set<int> EvalSet() override;
 
 
 };
