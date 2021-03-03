@@ -1,11 +1,5 @@
 a={1,2};
 b={2,4,6};
-x=2;
-union(a,b);
-while(x<5){
-set a=a*2;
-set b=a*5;
-union(a,b);
-x++;
-}
-set z=b;
+c={3,21};
+set a={2,3}*{5,1};
+c={3,23211};

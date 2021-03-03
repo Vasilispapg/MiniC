@@ -550,7 +550,7 @@ set<int> CIsmember::EvalSet() {
 	list<STNode*>::iterator it = m_children->begin();
 	int num = (*it)->Eval();
 	advance(it, 1);
-	set<int> id = (*it)->EvalSet(), m_set;
+	set<int> id = (*it)->EvalSet(), m_set = {};
 
 	for(set<int>::iterator itr = id.begin(); itr != id.end(); itr++) {
 		if (num == *itr) {
@@ -646,7 +646,7 @@ set<int> CDiv::EvalSet() {
 	if (set2.size() == 0)return set1;
 	for (set<int>::iterator itr = set1.begin(); itr != set1.end(); itr++) {
 		for (set<int>::iterator itr2 = set2.begin(); itr2 != set2.end(); itr2++) {
-			if (*itr2 == 0)exit(1);
+			if (*itr2 == 0) { printf("Error divede by 0 "); exit(1);}
 			int num = *itr / *itr2;
 			result.insert(num);
 		}

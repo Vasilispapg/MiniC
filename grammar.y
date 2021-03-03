@@ -112,6 +112,10 @@ assigns: IDENTIFIER '=' set   {$$ = new CAssignmentForSet();
 							$$->AddChild($2);
 							$$->AddChild($4);
 							}
+		| SET IDENTIFIER '=' set_funcs {$$ = new CAssignmentForSet();
+							$$->AddChild($2);
+							$$->AddChild($4);
+							}
 		| ID IDENTIFIER '=' IDENTIFIER {$$ = new CAssignment();
 							$$->AddChild($2);
 							$$->AddChild($4);
@@ -213,11 +217,13 @@ epxrs_operations:	last_exprs
 		;
 
 set_operations:	last_exprs 
+				|set_funcs
+				|set
 				|set_operations PLUS set_operations {$$ = new CAdd();
 						$$->AddChild($1);
 						$$->AddChild($3);
 						}
-	|set_operations PLUSPLUS {$$ = new CPlusplus();
+	| set_operations PLUSPLUS {$$ = new CPlusplus();
 						$$->AddChild($1);
 						}
 	| set_operations MINUS set_operations  {$$ = new CMinus();
